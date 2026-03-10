@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二元一次方程组练习 - 浙教版初一下</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .type-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .type-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .type-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .question-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .btn-submit {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: #5568d3;
+        }
+
+        .btn-next {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-next:hover {
+            background: #38a169;
+        }
+
+        .btn-hint {
+            background: #ed8936;
+            color: white;
+        }
+
+        .btn-hint:hover {
+            background: #dd6b20;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result.correct {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid #34d399;
+        }
+
+        .result.incorrect {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #f87171;
+        }
+
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e0e7ff;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .hint {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fef3c7;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .hint-title {
+            color: #92400e;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .type-selector {
+                flex-direction: column;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📐 二元一次方程组练习</h1>
+        <p class="subtitle">浙教版初一下学期 · 随机刷题</p>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="total">0</div>
+                <div class="stat-label">已做题目</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="correct">0</div>
+                <div class="stat-label">正确</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="accuracy">0%</div>
+                <div class="stat-label">正确率</div>
+            </div>
+        </div>
+
+        <div class="type-selector" id="typeSelector">
+            <button class="type-btn active" data-type="all">全部题型</button>
+            <button class="type-btn" data-type="basic">基础解方程组</button>
+            <button class="type-btn" data-type="app">应用题</button>
+            <button class="type-btn" data-type="param">参数问题</button>
+            <button class="type-btn" data-type="mixed">综合运用</button>
+        </div>
+
+        <div class="question-box">
+            <div class="question-number">第 <span id="qNum">1</span> 题</div>
+            <div class="question-text" id="questionText">点击"开始刷题"开始练习</div>
+            <input type="text" class="answer-input" id="answerInput" placeholder="输入你的答案（格式：x=3, y=5）" style="display: none;">
+        </div>
+
+        <div class="buttons">
+            <button class="btn btn-submit" id="startBtn" onclick="startQuiz()">开始刷题</button>
+            <button class="btn btn-submit" id="submitBtn" onclick="checkAnswer()" style="display: none;">提交答案</button>
+            <button class="btn btn-next" id="nextBtn" onclick="nextQuestion()" style="display: none;">下一题</button>
+            <button class="btn btn-hint" id="hintBtn" onclick="showHint()" style="display: none;">查看提示</button>
+        </div>
+
+        <div class="result" id="result"></div>
+        <div class="explanation" id="explanation"></div>
+        <div class="hint" id="hint"></div>
+    </div>
+
+    <script src="questions.js"></script>
+    <script>
+        let currentQuestion = null;
+        let questionCount = 0;
+        let correctCount = 0;
+        let currentType = 'all';
+        let currentQuestions = [];
+
+        function init() {
+            // 题型选择
+            document.querySelectorAll('.type-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentType = btn.dataset.type;
+                    resetQuiz();
+                });
+            });
+        }
+
+        function resetQuiz() {
+            questionCount = 0;
+            correctCount = 0;
+            updateStats();
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('hintBtn').style.display = 'none';
+            document.getElementById('answerInput').style.display = 'none';
+            document.getElementById('questionText').textContent = '点击"开始刷题"开始练习';
+            document.getElementById('qNum').textContent = '1';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('explanation').style.display = 'none';
+            document.getElementById('hint').style.display = 'none';
+        }
+
+        function startQuiz() {
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('submitBtn').style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('hintBtn').style.display = 'block';
+            document.getElementById('answerInput').style.display = 'block';
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerInput').focus();
+
+            // 筛选题目
+            if (currentType === 'all') {
+                currentQuestions = [...questions];
+            } else {
+                currentQuestions = questions.filter(q => q.type === currentType);
+            }
+
+            if (currentQuestions.length === 0) {
+                document.getElementById('questionText').textContent = '该题型暂无题目';
+                return;
+            }
+
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            // 随机选择一题
+            const randomIndex = Math.floor(Math.random() * currentQuestions.length);
+            currentQuestion = currentQuestions[randomIndex];
+
+            // 从数组中移除已选题目（避免重复）
+            currentQuestions.splice(randomIndex, 1);
+
+            if (currentQuestions.length === 0) {
+                // 如果题库用完了，重新加载
+                if (currentType === 'all') {
+                    currentQuestions = [...questions];
+                } else {
+                    currentQuestions = questions.filter(q => q.type === currentType);
+                }
+            }
+
+            questionCount++;
+            document.getElementById('qNum').textContent = questionCount;
+            document.getElementById('questionText').textContent = currentQuestion.question;
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerInput').focus();
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('explanation').style.display = 'none';
+            document.getElementById('hint').style.display = 'none';
+
+            document.getElementById('submitBtn').style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answerInput').value.trim();
+            const resultDiv = document.getElementById('result');
+            const explanationDiv = document.getElementById('explanation');
+
+            if (!userAnswer) {
+                alert('请输入答案！');
+                return;
+            }
+
+            // 检查答案（支持多种格式）
+            const isCorrect = checkAnswerFormat(userAnswer, currentQuestion.answer);
+
+            resultDiv.style.display = 'block';
+
+            if (isCorrect) {
+                correctCount++;
+                resultDiv.className = 'result correct';
+                resultDiv.innerHTML = '<strong>✅ 正确！</strong>';
+            } else {
+                resultDiv.className = 'result incorrect';
+                resultDiv.innerHTML = `<strong>❌ 错误</strong><br>正确答案：${currentQuestion.answer}`;
+            }
+
+            explanationDiv.style.display = 'block';
+            explanationDiv.innerHTML = `<strong>💡 解析：</strong><br>${currentQuestion.explanation}`;
+
+            updateStats();
+
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'block';
+        }
+
+        function checkAnswerFormat(userAnswer, correctAnswer) {
+            // 移除空格并转小写
+            const cleanUser = userAnswer.replace(/\s/g, '').toLowerCase();
+            const cleanCorrect = correctAnswer.replace(/\s/g, '').toLowerCase();
+
+            // 完全匹配
+            if (cleanUser === cleanCorrect) {
+                return true;
+            }
+
+            // 尝试解析 x 和 y 的值
+            const userX = extractValue(cleanUser, 'x');
+            const userY = extractValue(cleanUser, 'y');
+            const correctX = extractValue(cleanCorrect, 'x');
+            const correctY = extractValue(cleanCorrect, 'y');
+
+            return userX === correctX && userY === correctY;
+        }
+
+        function extractValue(str, variable) {
+            const patterns = [
+                new RegExp(variable + ' *= *(-?\\d+(?:\\.\\d+)?)'),
+                new RegExp(variable + ' *= *(-?\\d+/(?:\\d+))'),
+                new RegExp(variable + ' *= *\\((-?\\d+(?:\\.\\d+)?)\\)')
+            ];
+
+            for (const pattern of patterns) {
+                const match = str.match(pattern);
+                if (match) {
+                    return match[1];
+                }
+            }
+
+            return null;
+        }
+
+        function showHint() {
+            const hintDiv = document.getElementById('hint');
+            hintDiv.style.display = 'block';
+            hintDiv.innerHTML = `<div class="hint-title">💭 提示</div>${currentQuestion.hint}`;
+        }
+
+        function updateStats() {
+            document.getElementById('total').textContent = questionCount;
+            document.getElementById('correct').textContent = correctCount;
+
+            const accuracy = questionCount > 0 ? Math.round((correctCount / questionCount) * 100) : 0;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+        }
+
+        // 回车键提交
+        document.getElementById('answerInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && document.getElementById('submitBtn').style.display !== 'none') {
+                checkAnswer();
+            }
+        });
+
+        init();
+    </script>
+</body>
+</html>
