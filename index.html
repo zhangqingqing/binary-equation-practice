@@ -115,6 +115,25 @@
             color: #333;
         }
 
+        .equation-box {
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 1.3em;
+            background: #f0f4ff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            white-space: pre;
+            line-height: 1.6;
+        }
+
+        .equation-label {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
         .answer-input {
             width: 100%;
             padding: 15px;
@@ -363,7 +382,10 @@
 
             questionCount++;
             document.getElementById('qNum').textContent = questionCount;
-            document.getElementById('questionText').textContent = currentQuestion.question;
+            
+            // 格式化显示题目
+            displayQuestion(currentQuestion.question);
+            
             document.getElementById('answerInput').value = '';
             document.getElementById('answerInput').focus();
             document.getElementById('result').style.display = 'none';
@@ -372,6 +394,36 @@
 
             document.getElementById('submitBtn').style.display = 'block';
             document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function displayQuestion(questionText) {
+            const questionDiv = document.getElementById('questionText');
+            
+            // 检查是否包含方程（按行分割）
+            const lines = questionText.split('\n');
+            
+            if (lines.length === 1) {
+                // 纯文字题
+                questionDiv.innerHTML = questionText;
+            } else {
+                // 包含方程的题
+                let description = lines[0]; // 第一行是描述
+                let equations = lines.slice(1).join('\n'); // 其余是方程
+                
+                // 清理方程中的多余空行
+                equations = equations.replace(/\n+/g, '\n').trim();
+                
+                questionDiv.innerHTML = `
+                    <div style="margin-bottom: 10px;">${description}</div>
+                    <div class="equation-box">${escapeHtml(equations)}</div>
+                `;
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         function checkAnswer() {
