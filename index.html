@@ -119,32 +119,43 @@
             font-family: 'Courier New', 'Consolas', 'Lucida Console', monospace;
             font-size: 1.4em;
             background: #f8f9ff;
-            padding: 20px 25px;
+            padding: 15px 25px;
             border-radius: 10px;
             margin: 15px 0;
-            line-height: 1.8;
             display: flex;
-            align-items: center;
+            align-items: stretch;
             justify-content: center;
         }
 
         .equation-bracket {
-            font-size: 2.5em;
+            font-size: 2em;
             color: #667eea;
+            font-weight: bold;
+            line-height: 1.2;
             margin-right: 15px;
-            font-weight: normal;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0;
+        }
+
+        .equation-bracket span {
+            display: block;
             line-height: 1;
         }
 
         .equation-content {
             text-align: left;
-            white-space: pre;
             font-variant-numeric: tabular-nums;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
         }
 
         .equation-row {
             display: block;
-            padding: 3px 0;
+            line-height: 1.4;
         }
 
         .equation-label {
@@ -430,26 +441,36 @@
                 let description = lines[0]; // 第一行是描述
                 let equations = lines.slice(1).filter(line => line.trim()); // 过滤空行
                 
-                // 格式化方程，使等号对齐
+                // 格式化方程
                 const formattedEquations = formatEquations(equations);
+                
+                // 生成大括号
+                const bracketHTML = generateBracket(equations.length);
                 
                 questionDiv.innerHTML = `
                     <div style="margin-bottom: 15px;">${description}</div>
                     <div class="equation-box">
-                        <span class="equation-bracket">{</span>
+                        ${bracketHTML}
                         <div class="equation-content">${formattedEquations}</div>
                     </div>
                 `;
             }
         }
 
+        function generateBracket(rowCount) {
+            if (rowCount === 2) {
+                return `<div class="equation-bracket"><span>⎧</span><span>⎩</span></div>`;
+            } else if (rowCount === 3) {
+                return `<div class="equation-bracket"><span>⎧</span><span>⎨</span><span>⎩</span></div>`;
+            } else {
+                return `<div class="equation-bracket"><span>{</span></div>`;
+            }
+        }
+
         function formatEquations(equations) {
-            // 找到所有等号的位置，计算对齐
             const lines = equations.map(eq => eq.trim());
             
-            // 简单格式化：确保等号大致对齐
-            return lines.map((line, index) => {
-                // 高亮等号和变量
+            return lines.map((line) => {
                 let formatted = escapeHtml(line)
                     .replace(/([xy])/g, '<span style="color:#667eea;font-weight:bold;">$1</span>')
                     .replace(/(=)/g, '<span style="color:#764ba2;font-weight:bold;">$1</span>')
