@@ -160,6 +160,42 @@
             line-height: 1.4;
         }
 
+        .question-desc {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .equation-wrapper {
+            display: flex;
+            align-items: flex-start;
+            background: #f8f9ff;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 1.3em;
+        }
+
+        .equation-bracket-visual {
+            width: 20px;
+            height: 100%;
+            min-height: 50px;
+            border-left: 3px solid #667eea;
+            border-top: 3px solid #667eea;
+            border-bottom: 3px solid #667eea;
+            border-radius: 8px 0 0 8px;
+            margin-right: 15px;
+        }
+
+        .equation-list {
+            flex: 1;
+        }
+
+        .equation-line {
+            padding: 2px 0;
+            color: #333;
+        }
+
         .equation-label {
             color: #667eea;
             font-weight: bold;
@@ -337,6 +373,7 @@
     </div>
 
     <script src="questions.js"></script>
+    <script src="display-fix.js"></script>
     <script>
         let currentQuestion = null;
         let questionCount = 0;
@@ -437,42 +474,70 @@
             
             if (lines.length === 1) {
                 // 纯文字题
-                questionDiv.innerHTML = questionText;
+                questionDiv.textContent = questionText;
             } else {
                 // 包含方程的题
-                let description = lines[0]; // 第一行是描述
-                let equations = lines.slice(1).filter(line => line.trim()); // 过滤空行
+                const description = lines[0]; // 第一行是描述
+                const equations = lines.slice(1).filter(line => line.trim() !== ''); // 过滤空行
                 
-                // 格式化方程
-                const formattedEquations = formatEquations(equations);
+                // 清空容器
+                questionDiv.innerHTML = '';
                 
-                // 生成大括号
-                const bracketHTML = '<div class="equation-bracket"></div>';
+                // 添加描述
+                const descDiv = document.createElement('div');
+                descDiv.style.marginBottom = '15px';
+                descDiv.textContent = description;
+                questionDiv.appendChild(descDiv);
                 
-                questionDiv.innerHTML = `
-                    <div style="margin-bottom: 15px;">${description}</div>
-                    <div class="equation-box">
-                        ${bracketHTML}
-                        <div class="equation-content">${formattedEquations}</div>
-                    </div>
-                `;
+                // 创建方程组容器
+                const wrapper = document.createElement('div');
+                wrapper.style.display = 'flex';
+                wrapper.style.alignItems = 'flex-start';
+                wrapper.style.background = '#f8f9ff';
+                wrapper.style.padding = '15px 20px';
+                wrapper.style.borderRadius = '10px';
+                wrapper.style.fontFamily = "'Courier New', 'Consolas', monospace";
+                wrapper.style.fontSize = '1.3em';
+                
+                // 添加大括号
+                const bracket = document.createElement('div');
+                bracket.style.width = '20px';
+                bracket.style.minHeight = '50px';
+                bracket.style.borderLeft = '3px solid #667eea';
+                bracket.style.borderTop = '3px solid #667eea';
+                bracket.style.borderBottom = '3px solid #667eea';
+                bracket.style.borderRadius = '8px 0 0 8px';
+                bracket.style.marginRight = '15px';
+                wrapper.appendChild(bracket);
+                
+                // 添加方程列表
+                const eqList = document.createElement('div');
+                equations.forEach(eq => {
+                    const eqLine = document.createElement('div');
+                    eqLine.style.padding = '2px 0';
+                    eqLine.textContent = eq.trim();
+                    eqList.appendChild(eqLine);
+                });
+                wrapper.appendChild(eqList);
+                
+                questionDiv.appendChild(wrapper);
             }
         }
 
         function formatEquations(equations) {
-            const lines = equations.map(eq => eq.trim());
-            
-            return lines.map((line) => {
-                // 直接显示原始文本，不加颜色
-                let text = escapeHtml(line);
-                return `<span class="equation-row">${text}</span>`;
-            }).join('');
+            // 这个函数已不再使用，保留以避免其他依赖
+            return equations.map(eq => eq.trim()).join('\n');
         }
 
         function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+            // 简单的HTML转义
+            if (!text) return '';
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
         }
 
         function checkAnswer() {
