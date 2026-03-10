@@ -463,22 +463,9 @@
             const lines = equations.map(eq => eq.trim());
             
             return lines.map((line) => {
-                // 先添加颜色标记（使用占位符）
-                let temp = line
-                    .replace(/([xy])/g, '___VAR$1___')
-                    .replace(/(=)/g, '___EQ___')
-                    .replace(/(\d+)/g, '___NUM$1___');
-                
-                // 转义HTML
-                temp = escapeHtml(temp);
-                
-                // 还原颜色标签
-                temp = temp
-                    .replace(/___VAR([xy])___/g, '<span style="color:#667eea;font-weight:bold;">$1</span>')
-                    .replace(/___EQ___/g, '<span style="color:#764ba2;font-weight:bold;">=</span>')
-                    .replace(/___NUM(\d+)___/g, '<span style="color:#333;">$1</span>');
-                
-                return `<span class="equation-row">${temp}</span>`;
+                // 直接显示原始文本，不加颜色
+                let text = escapeHtml(line);
+                return `<span class="equation-row">${text}</span>`;
             }).join('');
         }
 
