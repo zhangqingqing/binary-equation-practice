@@ -128,20 +128,22 @@
         }
 
         .equation-bracket {
-            font-size: 2em;
-            color: #667eea;
-            font-weight: bold;
-            line-height: 1.2;
+            position: relative;
+            width: 20px;
             margin-right: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 0;
         }
 
-        .equation-bracket span {
-            display: block;
-            line-height: 1;
+        .equation-bracket::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 12px;
+            border-left: 3px solid #667eea;
+            border-top: 3px solid #667eea;
+            border-bottom: 3px solid #667eea;
+            border-radius: 12px 0 0 12px;
         }
 
         .equation-content {
@@ -150,7 +152,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 5px;
+            gap: 8px;
         }
 
         .equation-row {
@@ -445,7 +447,7 @@
                 const formattedEquations = formatEquations(equations);
                 
                 // 生成大括号
-                const bracketHTML = generateBracket(equations.length);
+                const bracketHTML = '<div class="equation-bracket"></div>';
                 
                 questionDiv.innerHTML = `
                     <div style="margin-bottom: 15px;">${description}</div>
@@ -454,16 +456,6 @@
                         <div class="equation-content">${formattedEquations}</div>
                     </div>
                 `;
-            }
-        }
-
-        function generateBracket(rowCount) {
-            if (rowCount === 2) {
-                return `<div class="equation-bracket"><span>⎧</span><span>⎩</span></div>`;
-            } else if (rowCount === 3) {
-                return `<div class="equation-bracket"><span>⎧</span><span>⎨</span><span>⎩</span></div>`;
-            } else {
-                return `<div class="equation-bracket"><span>{</span></div>`;
             }
         }
 
